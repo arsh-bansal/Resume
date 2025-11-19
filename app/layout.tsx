@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     url: 'https://arshbansal.dev',
     images: [
       {
-        url: '/images/og-image.jpg',
+        url: '/images/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Arsh Bansal - Full Stack Developer',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Arsh Bansal | Portfolio',
     description: 'Modern portfolio website showcasing my skills, experience, and projects',
-    images: ['/images/og-image.jpg'],
+    images: ['/images/og-image.png'],
   },
 }
 
