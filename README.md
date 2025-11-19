@@ -31,11 +31,13 @@ A modern, responsive portfolio website built with Next.js, TypeScript, and Tailw
 ### Installation
 
 1. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 2. Run the development server:
+
 ```bash
 pnpm dev
 ```
@@ -68,11 +70,13 @@ The theme toggle is already implemented. You can customize colors in `tailwind.c
 This project is set up with [shadcn/ui](https://ui.shadcn.com/), a collection of reusable components built with Radix UI and Tailwind CSS.
 
 **Add a new component:**
+
 ```bash
 pnpm dlx shadcn@latest add [component-name]
 ```
 
 **Example:**
+
 ```bash
 pnpm dlx shadcn@latest add card
 pnpm dlx shadcn@latest add dialog
@@ -80,11 +84,12 @@ pnpm dlx shadcn@latest add dropdown-menu
 ```
 
 **Use a component:**
+
 ```tsx
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 export function MyComponent() {
-  return <Button variant="outline">Click me</Button>
+  return <Button variant="outline">Click me</Button>;
 }
 ```
 
@@ -99,7 +104,81 @@ pnpm start
 
 ## Deployment
 
-This project can be easily deployed on:
+### Deploy on Railway
+
+This project is configured for easy deployment on Railway. Follow these steps:
+
+#### Prerequisites
+
+1. A Railway account (sign up at [railway.app](https://railway.app))
+2. Your code pushed to a Git repository (GitHub, GitLab, or Bitbucket)
+
+#### Deployment Steps
+
+1. **Push your code to GitHub/GitLab/Bitbucket**
+
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
+
+2. **Create a new project on Railway**
+
+   - Go to [railway.app](https://railway.app)
+   - Click "New Project"
+   - Select "Deploy from GitHub repo" (or your Git provider)
+   - Choose your repository
+
+3. **Configure Build Settings**
+   Railway should auto-detect Next.js, but verify these settings:
+
+   - **Build Command**: `pnpm build`
+   - **Start Command**: `pnpm start`
+   - **Node Version**: 20.x (or latest LTS)
+
+4. **Set Environment Variables** (if needed)
+
+   - Go to your project settings → Variables
+   - Add any required environment variables
+   - For Next.js, you typically don't need any for a basic portfolio
+
+5. **Deploy**
+
+   - Railway will automatically start building and deploying
+   - Wait for the build to complete
+   - Your site will be live at a `*.railway.app` domain
+
+6. **Custom Domain** (Optional)
+   - Go to Settings → Domains
+   - Add your custom domain
+   - Update DNS records as instructed
+
+#### Railway Configuration Files
+
+The project includes:
+
+- `railway.json` - Railway-specific configuration
+- `nixpacks.toml` - Build configuration for pnpm
+
+#### Important Notes
+
+- Railway automatically detects `pnpm` from `packageManager` in `package.json`
+- The build uses `pnpm install --frozen-lockfile` for reproducible builds
+- Port is automatically assigned by Railway (Next.js will use `PORT` env variable)
+
+#### Troubleshooting
+
+If deployment fails:
+
+1. Check build logs in Railway dashboard
+2. Ensure `pnpm-lock.yaml` is committed to your repo
+3. Verify Node.js version (should be 18+)
+4. Check that all dependencies are in `package.json`
+
+### Other Deployment Options
+
+This project can also be deployed on:
 
 - **Vercel** (recommended for Next.js)
 - **Netlify**
@@ -109,4 +188,3 @@ This project can be easily deployed on:
 ## License
 
 MIT License - see LICENSE file for details
-
