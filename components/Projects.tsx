@@ -3,7 +3,8 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { ExternalLink, Github } from 'lucide-react'
+import { ExternalLink, Github, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 import { projects } from '@/data/portfolio'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -55,41 +56,54 @@ export function Projects() {
                       ))}
                     </div>
                   </CardContent>
-                  <CardFooter className="flex items-center gap-2">
-                    {project.githubUrl && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        asChild
-                        className="flex-1"
-                      >
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                  <CardFooter className="flex flex-col gap-2">
+                    <Button
+                      variant="default"
+                      size="sm"
+                      asChild
+                      className="w-full"
+                    >
+                      <Link href={`/projects/${project.slug}`}>
+                        Know More
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </Button>
+                    <div className="flex items-center gap-2 w-full">
+                      {project.githubUrl && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="flex-1"
                         >
-                          <Github className="w-4 h-4 mr-2" />
-                          Code
-                        </a>
-                      </Button>
-                    )}
-                    {project.liveUrl && (
-                      <Button
-                        variant="default"
-                        size="sm"
-                        asChild
-                        className="flex-1"
-                      >
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Github className="w-4 h-4 mr-2" />
+                            Code
+                          </a>
+                        </Button>
+                      )}
+                      {project.liveUrl && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="flex-1"
                         >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Demo
-                        </a>
-                      </Button>
-                    )}
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Live
+                          </a>
+                        </Button>
+                      )}
+                    </div>
                   </CardFooter>
                 </Card>
               </motion.div>

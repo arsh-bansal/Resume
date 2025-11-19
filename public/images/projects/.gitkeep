@@ -1,0 +1,7 @@
+# Project images
+# Add project images here with the following naming convention:
+# - {project-slug}-main.jpg - Main project image for cards
+# - {project-slug}-og.jpg - OG image for social sharing (1200x630px)
+# - {project-slug}-nav.png - Navigation/icon image (small, square)
+# - {project-slug}-1.jpg through {project-slug}-4.jpg - Gallery images
+

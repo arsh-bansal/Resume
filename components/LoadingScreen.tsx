@@ -22,7 +22,6 @@ interface LoadingScreenProps {
 }
 
 export function LoadingScreen({ isLoading }: LoadingScreenProps) {
-  const [messageIndex, setMessageIndex] = useState(0)
   const [progress, setProgress] = useState(0)
   const [isOnline, setIsOnline] = useState(true)
 
@@ -42,7 +41,7 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
     }
   }, [])
 
-  // Update progress and messages when loading
+  // Update progress when loading
   useEffect(() => {
     if (!isLoading) {
       setProgress(0)
@@ -50,14 +49,8 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
     }
 
     let progressInterval: NodeJS.Timeout
-    let messageInterval: NodeJS.Timeout
 
     setProgress(0)
-
-    // Change message every 800ms
-    messageInterval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % funnyMessages.length)
-    }, 800)
 
     // Simulate loading progress
     progressInterval = setInterval(() => {
@@ -72,7 +65,6 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
     }, 200)
 
     return () => {
-      clearInterval(messageInterval)
       clearInterval(progressInterval)
     }
   }, [isLoading, isOnline])
@@ -144,15 +136,13 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
 
             {/* Loading Message */}
             <motion.div
-              key={messageIndex}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
               className="mb-8"
             >
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                {funnyMessages[messageIndex]}
+                Loading...
               </h2>
               <p className="text-gray-400 text-sm">
                 {isOnline

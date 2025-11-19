@@ -77,24 +77,6 @@ export function Contact() {
                     </a>
                   </CardContent>
                 </Card>
-                <Card className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-4">
-                    <a
-                      href="tel:+61410999585"
-                      className="flex items-center space-x-3 group"
-                    >
-                      <div className="p-2 bg-primary/10 rounded-lg group-hover:scale-110 transition-transform">
-                        <Phone className="w-5 h-5 text-primary" />
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">
-                          Phone
-                        </div>
-                        <div className="font-medium">0410999585</div>
-                      </div>
-                    </a>
-                  </CardContent>
-                </Card>
               </div>
             </motion.div>
 

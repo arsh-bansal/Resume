@@ -21,6 +21,12 @@ export interface Project {
   githubUrl?: string;
   liveUrl?: string;
   imageUrl?: string;
+  slug: string;
+  keyFeatures?: string[];
+  technicalHighlights?: {
+    title: string;
+    description: string;
+  }[];
 }
 
 export interface SocialLink {

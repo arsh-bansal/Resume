@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { Menu, X, Moon, Sun } from 'lucide-react'
 import { useTheme } from './ThemeProvider'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -15,9 +16,13 @@ const navItems = [
 ]
 
 export function Navigation() {
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
+
+  // Hide navbar on project detail pages
+  const isProjectPage = pathname?.startsWith('/projects/')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +31,11 @@ export function Navigation() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Don't render navbar on project detail pages
+  if (isProjectPage) {
+    return null
+  }
 
   return (
     <nav
