@@ -22,7 +22,10 @@ export async function generateMetadata({
     }
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://arshbansal.dev'
+  
   return {
+    metadataBase: new URL(baseUrl),
     title: `${project.title} | Arsh Bansal Portfolio`,
     description: project.description,
     openGraph: {

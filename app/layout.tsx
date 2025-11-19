@@ -8,6 +8,7 @@ import { Navigation } from '@/components/Navigation'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://arshbansal.dev'),
   title: 'Arsh Bansal | Portfolio',
   description: 'Modern portfolio website showcasing my skills, experience, and projects',
   openGraph: {
