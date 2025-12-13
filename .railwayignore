@@ -1,6 +1,0 @@
-# Railway ignore file
-# This file tells Railway what to ignore during deployment
-
-# Don't ignore public folder - it's needed for static assets
-!public/
-

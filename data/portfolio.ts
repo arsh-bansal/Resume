@@ -100,7 +100,7 @@ export const projects: Project[] = [
       "OpenAI",
       "PayPal",
     ],
-    githubUrl: "https://github.com/aditya04tripathi/saas-validator-ai",
+    githubUrl: "https://github.com/aditya04tripathi/gnosis",
     liveUrl: "https://gnosis.adityatripathi.dev/",
     imageUrl: "/images/projects/gnosis.png",
     keyFeatures: [
