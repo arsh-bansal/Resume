@@ -33,5 +33,10 @@ pnpm-debug.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+
+# railway
+.railway
+
+# docker
+.dockerignore
 
