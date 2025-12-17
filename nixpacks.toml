@@ -2,15 +2,15 @@
 nixPkgs = ["nodejs-20_x", "pnpm"]
 
 [phases.install]
-cmds = ["pnpm install --frozen-lockfile --prod=false"]
+cmds = ["pnpm install --frozen-lockfile --prod=false --no-optional"]
 
 [phases.build]
-cmds = ["NODE_OPTIONS='--max-old-space-size=512' pnpm build"]
+cmds = ["NODE_OPTIONS='--max-old-space-size=384' pnpm build"]
 
 [start]
-cmd = "NODE_OPTIONS='--max-old-space-size=512' pnpm start"
+cmd = "NODE_OPTIONS='--max-old-space-size=256' pnpm start"
 
 [variables]
 NODE_ENV = "production"
-NODE_OPTIONS = "--max-old-space-size=512"
+NODE_OPTIONS = "--max-old-space-size=256"
 
