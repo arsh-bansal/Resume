@@ -46,7 +46,12 @@ export function LightRays() {
       })
     }
 
+    let animationFrameId: number
+    let isMounted = true
+
     const animate = () => {
+      if (!isMounted || !ctx) return
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       rays.forEach((ray) => {
@@ -93,12 +98,18 @@ export function LightRays() {
         ctx.stroke()
       })
 
-      requestAnimationFrame(animate)
+      if (isMounted) {
+        animationFrameId = requestAnimationFrame(animate)
+      }
     }
 
     animate()
 
     return () => {
+      isMounted = false
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
       window.removeEventListener('resize', resizeCanvas)
     }
   }, [theme])

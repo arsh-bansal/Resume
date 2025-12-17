@@ -20,8 +20,6 @@ export function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
     // You can integrate with a service like Formspree, EmailJS, or your backend
     alert("Thank you for your message! I'll get back to you soon.");
     setFormData({ name: "", email: "", message: "" });

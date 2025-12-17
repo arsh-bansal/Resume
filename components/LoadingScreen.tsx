@@ -49,11 +49,14 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
     }
 
     let progressInterval: NodeJS.Timeout
+    let isMounted = true
 
     setProgress(0)
 
     // Simulate loading progress
     progressInterval = setInterval(() => {
+      if (!isMounted) return
+      
       setProgress((prev) => {
         if (prev >= 100) {
           return 100
@@ -65,6 +68,7 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
     }, 200)
 
     return () => {
+      isMounted = false
       clearInterval(progressInterval)
     }
   }, [isLoading, isOnline])
