@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* The design system lives in site.css — hand-written, not utility soup.
+   Tailwind stays available for one-off spacing inside components. */
+@import "./site.css";
