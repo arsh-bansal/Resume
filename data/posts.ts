@@ -20,17 +20,19 @@ export type Post = {
 /* ==========================================================================
    READ THIS BEFORE YOU DEPLOY
    --------------------------------------------------------------------------
-   These three posts are DRAFTS. The structure, the arguments and the
-   technical detail come from your own projects, but the sentences are mine.
-   The whole point of adding writing to the site is that it's the one part
-   an AI can't fake for you — a recruiter who reads two paragraphs of
-   generic prose will trust the rest of the site less, not more.
+   The numbers in here are now your real ones — pulled from the EcoLens and
+   CloudEco project data and your résumé, not invented. But the sentences are
+   still assisted, and that's the part that matters: writing is the one thing
+   on this site an AI can't fake for you. A recruiter who reads two paragraphs
+   of generic prose trusts the rest of the site LESS, not more.
 
-   Rewrite each one in your own voice before publishing. Concretely:
-     - put back the specific numbers, error messages and dead ends
-     - cut anything you couldn't defend in a follow-up question
-     - keep `draft: true` on anything you haven't rewritten yet;
-       drafts are hidden in production (see app/writing/page.tsx)
+   Everything is still draft: true. Before you flip any post live:
+     - read it out loud once; rewrite the lines that don't sound like you
+     - add the one detail only you have — the error message, the dead end,
+       the thing you got wrong first. That's what makes it real.
+     - the single remaining TODO(arsh) is in the Graviton2 post: the
+       cost-per-1k-invocations figure. Put your real number in or cut the line.
+     - to publish one, delete its `draft: true` line. That's the whole switch.
    ========================================================================== */
 
 export const posts: Post[] = [
@@ -46,30 +48,34 @@ export const posts: Post[] = [
     body: [
       {
         t: "p",
-        text: "Aussie EcoLens writes to AWS and reads from Azure. Not because a client asked for it, and not because it's cheaper — it isn't. The constraint was set for us, and working inside it turned out to teach more about consistency boundaries than any single-cloud version of the same system would have.",
+        text: "Aussie EcoLens writes to AWS and reads from Azure. Not because a client asked for it, and not because it's cheaper — it isn't. The constraint was set for us, and working inside it taught me more about consistency boundaries than any single-cloud version of the same system would have.",
       },
       { t: "h2", text: "What CQRS forces you to admit" },
       {
         t: "p",
-        text: "The moment the read side lives in another vendor's network, you can no longer hand-wave about eventual consistency. Every projection has a measurable lag, and you have to decide, per feature, whether that lag is acceptable. We found the honest answer was that almost none of the read paths needed to be current. A wildlife observation that appears in the feed eleven seconds after upload is fine. A user who uploads an image and doesn't see it in their own list is not.",
+        text: "The moment the read side lives in another vendor's network, you can't hand-wave about eventual consistency any more. Every projection has a measurable lag, and you have to decide, per feature, whether that lag is acceptable. Ours was held to one to two seconds by a replicator riding DynamoDB Streams — but even one to two seconds forces the question. The honest answer was that almost none of the read paths needed to be current. An observation that appears in the public feed a second or two after upload is fine. A user who uploads an image and doesn't immediately see it in their own list is not.",
       },
       {
         t: "p",
-        text: "So the exception got special handling and everything else got the cheap path. That split — one narrow strongly-consistent case, everything else projected — is the whole design.",
+        text: "So that one exception got special handling and everything else got the cheap projected path. That split — one narrow strongly-consistent case, everything else eventually-consistent — is the whole design.",
       },
       { t: "h2", text: "The write side" },
       {
         t: "p",
-        text: "Uploads hit API Gateway, land in S3, and fire a Lambda. Detection runs first, classification second, and the result is appended to the write store before an event goes out to the projector.",
+        text: "Uploads hit API Gateway, land in S3, and fire a Lambda. Detection runs first, classification second, and the result is written to DynamoDB before a Streams event goes out to the Azure projector that builds the Cosmos DB read model.",
       },
       {
         t: "code",
         lang: "text",
-        text: "client → API Gateway → S3 (raw)\n                 ↓\n            Lambda: MegaDetector v5a   (is there an animal?)\n                 ↓ (if yes)\n            Lambda: SpeciesNet          (which animal?)\n                 ↓\n            write store → event → Azure projector → read model",
+        text: "client → API Gateway → S3 (raw)\n                 ↓\n            Lambda: MegaDetector v5a   (is there an animal?)\n                 ↓ (if yes)\n            Lambda: SpeciesNet          (which animal?)\n                 ↓\n            DynamoDB → Streams → Azure projector → Cosmos DB (read model)",
       },
       {
         t: "p",
-        text: "Running the cheap model first is the single highest-leverage decision in the pipeline. A camera trap produces overwhelmingly empty frames — wind on a branch, a passing shadow. MegaDetector answers one binary question quickly, and only what survives that filter pays for classification.",
+        text: "Running the cheap model first is the single highest-leverage decision in the pipeline. A camera trap produces overwhelmingly empty frames — wind on a branch, a passing shadow. MegaDetector v5a answers one binary question quickly, and only what survives that filter pays for SpeciesNet classification. On our 26-image ground-truth set the classifier hit 100% top-1, but that number only means anything because the detector kept junk frames out of it.",
+      },
+      {
+        t: "p",
+        text: "The whole write side — four Lambdas for tagging, thumbnails, replication and SNS alerts — is provisioned as code through Terraform and AWS SAM. That mattered more than it sounds: when the seam between clouds is the risky part, you want the AWS half to be reproducible down to the IAM policy so it isn't also a variable.",
       },
       { t: "h2", text: "Where it hurt" },
       {
@@ -77,13 +83,13 @@ export const posts: Post[] = [
         items: [
           "Two IAM models. AWS roles and Azure RBAC do not think about identity the same way, and the mapping between them is manual.",
           "Two sets of logs, in two formats, in two consoles. Correlating a single request across the seam needs a trace ID you propagate yourself, because nothing does it for you.",
-          "Egress. Data leaving one cloud to be projected into another is billed, and the bill is the argument against ever doing this without a reason.",
+          "Egress. Data leaving one cloud to be projected into another is billed, and that bill is the standing argument against ever doing this without a reason.",
         ],
       },
       { t: "h2", text: "Would I do it again" },
       {
         t: "p",
-        text: "For a product, no — not without a regulatory or commercial reason forcing it. For learning where a system's consistency boundaries genuinely are, it was the fastest teacher I've had, because the architecture stopped being a diagram and started being something with a latency number attached to it.",
+        text: "For a product, no — not without a regulatory or commercial reason forcing it. For learning where a system's consistency boundaries genuinely are, it was the fastest teacher I've had, because the architecture stopped being a diagram and became something with a latency number attached to it.",
       },
     ],
   },
@@ -104,13 +110,15 @@ export const posts: Post[] = [
       { t: "h2", text: "The problem in one sentence" },
       {
         t: "p",
-        text: "Several of the vision libraries in the dependency tree publish x86_64 wheels and nothing else, so on arm64 pip falls back to building from source inside the image — which means the image build now needs a compiler toolchain, and the build time goes from seconds to minutes.",
+        text: "Several of the vision libraries in the dependency tree publish x86_64 wheels and nothing else, so on arm64 pip falls back to building from source inside the image — which means the build now needs a full compiler toolchain, and build time goes from seconds to minutes.",
       },
       { t: "h3", text: "What worked" },
       {
         t: "ul",
         items: [
-          "A multi-stage build: compile in a stage that has the toolchain, copy only the built artefacts into the runtime stage.",
+          "A multi-stage build: compile in a stage that has the toolchain, copy only the built artefacts into a slim runtime stage.",
+          "Forcing CPU-only variants of the ML dependencies. No CUDA in the tree meant a dramatically smaller image and no GPU assumptions to unwind at runtime.",
+          "Lazy-loading the models from S3 on first invocation instead of baking them into the image, so the container ships light and only pulls weights when it's actually asked to.",
           "Pinning every version. On arm64, 'latest' is a coin flip about whether a wheel exists this week.",
           "Building natively on arm64 rather than emulating. Cross-building under emulation worked but was slow enough to break the feedback loop.",
         ],
@@ -123,7 +131,7 @@ export const posts: Post[] = [
       { t: "h2", text: "The number that matters" },
       {
         t: "p",
-        text: "TODO(arsh): put your real before/after here — image size, cold start, and cost per thousand invocations. This is the paragraph a hiring manager will actually read.",
+        text: "Between the CPU-only dependencies and moving the model weights out to S3, the container went from 6.8 GB to under 2 GB — a cut of more than 70% — and cold starts came down under 30 seconds. TODO(arsh): add the per-thousand-invocations cost difference here if you have it, or cut this sentence. That's the figure a hiring manager will actually stop on.",
       },
     ],
   },
@@ -152,6 +160,10 @@ export const posts: Post[] = [
       },
       { t: "h2", text: "How it ended up on CloudEco" },
       {
+        t: "p",
+        text: "CloudEco is a FastAPI inference service on a three-node GKE cluster — one master, two workers, 1 vCPU pod limits — and the split between the tools fell out cleanly once I stopped fighting it.",
+      },
+      {
         t: "ul",
         items: [
           "Terraform: the GKE cluster, the networking, the service accounts, the buckets — anything with a lifecycle.",
@@ -161,7 +173,11 @@ export const posts: Post[] = [
       },
       {
         t: "p",
-        text: "The third line took the longest to accept. There's a strong pull toward driving Kubernetes deployments from Terraform because it keeps everything in one place, and it works, and then your infrastructure state file starts churning every time someone ships a new image tag.",
+        text: "The third line took the longest to accept. There's a strong pull toward driving Kubernetes deployments from Terraform because it keeps everything in one place, and it works — and then your infrastructure state file starts churning every time someone ships a new image tag.",
+      },
+      {
+        t: "p",
+        text: "Keeping deployment out of Terraform also kept the load-testing honest. I drove the service with Locust across 1, 2, 4 and 8 pod configurations to find the saturation point, and I wanted scaling the pod count to be a cluster-level change I could make quickly, not a terraform apply against the whole stack.",
       },
     ],
   },
