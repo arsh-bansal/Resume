@@ -44,7 +44,6 @@ export const posts: Post[] = [
     date: "2026-05-18",
     readingMinutes: 7,
     tags: ["AWS", "Azure", "CQRS", "Architecture"],
-    draft: true,
     body: [
       {
         t: "p",
